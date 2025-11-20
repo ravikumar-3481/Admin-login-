@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard | Ravi Portfolio</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-soft: rgba(37, 99, 235, 0.1);
+      --dark: #020617;
+      --card-bg: #ffffff;
+      --border-soft: #e5e7eb;
+      --sidebar-bg: #020617;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* Login screen */
+    #auth-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .auth-card {
+      max-width: 420px;
+      width: 100%;
+      background: radial-gradient(circle at top left, #1d4ed8 0, #020617 55%);
+      border-radius: 1.5rem;
+      padding: 2.25rem 2rem;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: #e5e7eb;
+    }
+
+    .auth-card h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .auth-card p {
+      font-size: 0.9rem;
+      color: #cbd5f5;
+    }
+
+    .auth-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a5b4fc;
+      margin-bottom: 1.25rem;
+    }
+
+    .auth-badge i {
+      font-size: 0.7rem;
+    }
+
+    .auth-visual {
+      margin-top: 1.2rem;
+      padding: 0.9rem;
+      border-radius: 1rem;
+      background: radial-gradient(circle at top, rgba(59, 130, 246, 0.4), transparent 60%);
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .auth-visual i {
+      font-size: 1.8rem;
+      color: #bfdbfe;
+    }
+
+    /* Dashboard Layout */
+    #dashboard {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: radial-gradient(circle at top, #1d4ed8 0, #020617 45%, #000 100%);
+      color: #e5e7eb;
+      padding: 1.25rem 1rem;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.25rem;
+      padding: 0.75rem 0.8rem;
+      border-radius: 0.9rem;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .sidebar-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #3b82f6, #1e3a8a);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .sidebar-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .sidebar-sub {
+      font-size: 0.7rem;
+      color: #94a3b8;
+    }
+
+    .sidebar-nav {
+      margin-top: 0.75rem;
+      flex: 1;
+    }
+
+    .sidebar-nav .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.85rem;
+      border-radius: 0.75rem;
+      color: #cbd5f5;
+      margin-bottom: 0.2rem;
+      transition: all 0.18s ease;
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .sidebar-nav .nav-link i {
+      font-size: 0.9rem;
+      width: 18px;
+    }
+
+    .sidebar-nav .nav-link.active,
+    .sidebar-nav .nav-link:hover {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0.25), rgba(79, 70, 229, 0.25));
+      color: #eff6ff;
+      cursor: pointer;
+    }
+
+    .sidebar-footer {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      padding: 0.5rem 0.75rem 0.75rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .sidebar-footer button {
+      font-size: 0.75rem;
+    }
+
+    .main-content {
+      flex: 1;
+      background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 55%), #020617;
+      padding: 1.4rem 1.6rem;
+      color: #e5e7eb;
+    }
+
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.1rem;
+    }
+
+    .main-header h1 {
+      font-size: 1.3rem;
+    }
+
+    .main-header span {
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+
+    .user-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 0.8rem;
+    }
+
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #2563eb, #22c55e);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .card-glass {
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.9), rgba(15,23,42,0.98));
+      border-radius: 1.2rem;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: 0 18px 45px rgba(15,23,42,0.9);
+    }
+
+    .section-title {
+      font-size: 1.02rem;
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .section-title i {
+      font-size: 0.9rem;
+      color: #60a5fa;
+    }
+
+    .section-subtitle {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-bottom: 0.8rem;
+    }
+
+    .form-label {
+      font-size: 0.8rem;
+      color: #cbd5f5;
+    }
+
+    .form-control,
+    .form-select,
+    textarea.form-control {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 0.7rem;
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      color: #e5e7eb;
+      font-size: 0.85rem;
+    }
+
+    .form-control:focus,
+    .form-select:focus,
+    textarea.form-control:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35);
+      background: rgba(15, 23, 42, 0.98);
+      color: #e5e7eb;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      border: none;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      padding: 0.45rem 1.1rem;
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-outline-light {
+      border-radius: 999px;
+      font-size: 0.8rem;
+    }
+
+    .pill {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: #a5b4fc;
+    }
+
+    .list-container {
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: 0.25rem;
+    }
+
+    .item-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.6rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(31, 41, 55, 0.8);
+      background: rgba(15, 23, 42, 0.72);
+      margin-bottom: 0.5rem;
+      transition: all 0.15s ease;
+    }
+
+    .item-row:hover {
+      border-color: rgba(59, 130, 246, 0.7);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .item-row-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .item-row-meta {
+      font-size: 0.7rem;
+      color: #9ca3af;
+    }
+
+    .badge-soft {
+      font-size: 0.65rem;
+      background: rgba(37, 99, 235, 0.18);
+      border-radius: 999px;
+      padding: 0.15rem 0.5rem;
+      border: 1px solid rgba(37, 99, 235, 0.5);
+      color: #bfdbfe;
+    }
+
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Password Modal */
+    .modal-content {
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.98), #020617);
+      color: #e5e7eb;
+      border-radius: 1rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .modal-header {
+      border-bottom: 1px solid rgba(51, 65, 85, 0.7);
+    }
+
+    .modal-footer {
+      border-top: 1px solid rgba(51, 65, 85, 0.7);
+    }
+
+    .modal-title {
+      font-size: 1rem;
+    }
+
+    .text-danger {
+      font-size: 0.75rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========== AUTH SECTION (GOOGLE LOGIN) ========== -->
+<div id="auth-section">
+  <div class="auth-card fade-in-up">
+    <span class="auth-badge">
+      <i class="fa-solid fa-shield-halved"></i> Admin Access
+    </span>
+    <h1>Ravi Portfolio Admin</h1>
+    <p>Secure dashboard to edit header logo, resume, projects, certificates, and experience for your portfolio.</p>
+
+    <div class="mt-3">
+      <small class="text-light d-block mb-2">
+        Sign in with your Google account (only the allowed admin email can access).
+      </small>
+
+      <!-- ✅ Google Sign-In button will be rendered inside this div -->
+      <div id="googleSignInContainer"></div>
+
+      <!-- optional note -->
+      <small class="d-block mt-2" style="font-size:0.75rem; color:#cbd5f5;">
+        Use the same Google account you configured as admin.
+      </small>
+    </div>
+
+    <div class="auth-visual">
+      <i class="fa-solid fa-gauge-high"></i>
+      <div>
+        <div><strong>What you can manage:</strong></div>
+        <div>Logo, resume image & link, project cards, certificates, and experiences with password-protected saves.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== DASHBOARD SECTION ========== -->
+<div id="dashboard" class="d-none">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">RV</div>
+      <div>
+        <div class="sidebar-title">Ravi Admin Panel</div>
+        <div class="sidebar-sub">Portfolio CMS</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-link active" data-section="section-overview">
+        <i class="fa-solid fa-gauge"></i> Overview
+      </button>
+      <button class="nav-link" data-section="section-branding">
+        <i class="fa-solid fa-image"></i> Logo & Resume
+      </button>
+      <button class="nav-link" data-section="section-projects">
+        <i class="fa-solid fa-diagram-project"></i> Projects
+      </button>
+      <button class="nav-link" data-section="section-certificates">
+        <i class="fa-solid fa-award"></i> Certificates
+      </button>
+      <button class="nav-link" data-section="section-experience">
+        <i class="fa-solid fa-briefcase"></i> Experience
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span id="sidebar-user-email">Not logged in</span>
+      <button class="btn btn-outline-light btn-sm" id="btn-logout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="main-header">
+      <div>
+        <h1>Content Dashboard</h1>
+        <span>Manage portfolio content in real-time</span>
+      </div>
+      <div class="user-pill">
+        <div class="user-avatar" id="user-avatar-text">RV</div>
+        <div>
+          <div id="user-name-small">Admin</div>
+          <small class="text-muted" id="user-email-small">admin@example.com</small>
+        </div>
+      </div>
+    </header>
+
+    <!-- Overview Section -->
+    <section id="section-overview" class="fade-in-up">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="card-glass">
+            <div class="section-title">
+              <i class="fa-solid fa-bullseye"></i> Quick Stats
+            </div>
+            <div class="section-subtitle">Current content snapshot (from localStorage)</div>
+            <ul class="list-unstyled mb-0" style="font-size:0.85rem;">
+              <li class="mb-1">
+                <i class="fa-solid fa-diagram-project me-2 text-primary"></i>
+                Projects: <span id="stat-projects" class="badge-soft">0</span>
+              </li>
+              <li class="mb-1">
+                <i class="fa-solid fa-award me-2 text-warning"></i>
+                Certificates: <span id="stat-certificates" class="badge-soft">0</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-briefcase me-2 text-success"></i>
+                Experience entries: <span id="stat-experience" class="badge-soft">0</span>
+              </li>
+            </ul>
+            <div class="mt-3">
+              <span class="pill">
+                <i class="fa-solid fa-lock me-1"></i> All saves require password
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="card-glass">
+            <div class="section-title">
+              <i class="fa-solid fa-circle-info"></i> How to use this dashboard
+            </div>
+            <ol style="font-size:0.85rem; color:#d1d5db; padding-left:1.1rem;">
+              <li>Log in with your Google account (only the admin email is allowed).</li>
+              <li>Go to each tab (Logo & Resume, Projects, Certificates, Experience).</li>
+              <li>Fill the form for new items or click "Edit" on existing items.</li>
+              <li>Click <strong>Save</strong>. A password popup will appear.</li>
+              <li>Enter the correct admin password to save changes. Data is stored in <strong>localStorage</strong> and can be sent to backend via <code>saveToBackend()</code>.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Branding Section -->
+    <section id="section-branding" class="d-none fade-in-up">
+      <div class="card-glass">
+        <div class="section-title">
+          <i class="fa-solid fa-image"></i> Header Logo & Resume
+        </div>
+        <div class="section-subtitle">Update logo used in header, resume image, and resume download link.</div>
+
+        <form id="branding-form">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Header Logo URL</label>
+              <input type="text" class="form-control" id="logoUrl" placeholder="https://...logo.png">
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <div>
+                <label class="form-label">Preview</label><br>
+                <img id="logoPreview" src="" alt="Logo preview" style="max-height:40px; border-radius:0.5rem; border:1px solid rgba(148,163,184,0.4); background:#020617; padding:4px;">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Resume Image URL</label>
+              <input type="text" class="form-control" id="resumeImageUrl" placeholder="https://...resume.jpg">
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <div>
+                <label class="form-label">Preview</label><br>
+                <img id="resumeImagePreview" src="" alt="Resume preview" style="max-height:80px; border-radius:0.5rem; border:1px solid rgba(148,163,184,0.4); background:#020617; padding:4px;">
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <label class="form-label">Resume Download Link</label>
+              <input type="text" class="form-control" id="resumeDownloadUrl" placeholder="https://drive.google.com/...">
+            </div>
+          </div>
+
+          <div class="mt-3 d-flex gap-2">
+            <button type="button" class="btn btn-primary" id="btn-save-branding">
+              <i class="fa-solid fa-floppy-disk me-1"></i> Save
+            </button>
+            <button type="button" class="btn btn-outline-light btn-sm" id="btn-reset-branding">
+              <i class="fa-solid fa-rotate-left me-1"></i> Reset from storage
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="section-projects" class="d-none fade-in-up">
+      <div class="card-glass mb-3">
+        <div class="section-title">
+          <i class="fa-solid fa-diagram-project"></i> Projects
+        </div>
+        <div class="section-subtitle">Add or edit project cards for the Projects section.</div>
+
+        <form id="project-form">
+          <input type="hidden" id="projectIndex" value="-1">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Project Title</label>
+              <input type="text" class="form-control" id="projectTitle" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Project Image URL</label>
+              <input type="text" class="form-control" id="projectImage" placeholder="https://...">
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" id="projectDescription" rows="2"></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Project Link (GitHub / Live)</label>
+              <input type="text" class="form-control" id="projectLink" placeholder="https://github.com/...">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tags (comma separated)</label>
+              <input type="text" class="form-control" id="projectTags" placeholder="HTML, CSS, JavaScript">
+            </div>
+          </div>
+
+          <div class="mt-3 d-flex gap-2">
+            <button type="button" class="btn btn-primary" id="btn-save-project">
+              <i class="fa-solid fa-floppy-disk me-1"></i>
+              <span id="projectSaveLabel">Save Project</span>
+            </button>
+            <button type="button" class="btn btn-outline-light btn-sm" id="btn-clear-project-form">
+              <i class="fa-solid fa-xmark me-1"></i> Clear form
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card-glass">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="section-title mb-0">
+            <i class="fa-solid fa-layer-group"></i> All Projects
+          </div>
+          <span class="pill">
+            <i class="fa-solid fa-database me-1"></i> From localStorage
+          </span>
+        </div>
+
+        <div class="list-container" id="project-list"></div>
+      </div>
+    </section>
+
+    <!-- Certificates Section -->
+    <section id="section-certificates" class="d-none fade-in-up">
+      <div class="card-glass mb-3">
+        <div class="section-title">
+          <i class="fa-solid fa-award"></i> Certificates
+        </div>
+        <div class="section-subtitle">Add or edit certificate cards shown in your Certificates section.</div>
+
+        <form id="certificate-form">
+          <input type="hidden" id="certificateIndex" value="-1">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Certificate Title</label>
+              <input type="text" class="form-control" id="certTitle">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Organization / Institute</label>
+              <input type="text" class="form-control" id="certInstitute">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Issue Date</label>
+              <input type="text" class="form-control" id="certDate" placeholder="June 2025">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Logo or Background Image URL</label>
+              <input type="text" class="form-control" id="certImage">
+            </div>
+            <div class="col-md-8">
+              <label class="form-label">Certificate Link (Drive, etc.)</label>
+              <input type="text" class="form-control" id="certLink">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Tags (comma separated)</label>
+              <input type="text" class="form-control" id="certTags" placeholder="Canva, Design">
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">Short Description</label>
+              <textarea class="form-control" id="certDescription" rows="2"></textarea>
+            </div>
+          </div>
+
+          <div class="mt-3 d-flex gap-2">
+            <button type="button" class="btn btn-primary" id="btn-save-certificate">
+              <i class="fa-solid fa-floppy-disk me-1"></i>
+              <span id="certSaveLabel">Save Certificate</span>
+            </button>
+            <button type="button" class="btn btn-outline-light btn-sm" id="btn-clear-certificate-form">
+              <i class="fa-solid fa-xmark me-1"></i> Clear form
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card-glass">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="section-title mb-0">
+            <i class="fa-solid fa-list-check"></i> All Certificates
+          </div>
+        </div>
+
+        <div class="list-container" id="certificate-list"></div>
+      </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="section-experience" class="d-none fade-in-up">
+      <div class="card-glass mb-3">
+        <div class="section-title">
+          <i class="fa-solid fa-briefcase"></i> Experience
+        </div>
+        <div class="section-subtitle">Manage cards in the Experience section.</div>
+
+        <form id="experience-form">
+          <input type="hidden" id="experienceIndex" value="-1">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Job Title</label>
+              <input type="text" class="form-control" id="expTitle">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Company / Role Type</label>
+              <input type="text" class="form-control" id="expCompany">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Duration</label>
+              <input type="text" class="form-control" id="expDuration" placeholder="Aug 2024 - Present">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Skills / Tags (comma separated)</label>
+              <input type="text" class="form-control" id="expSkills" placeholder="Design, Automation">
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" id="expDescription" rows="2"></textarea>
+            </div>
+          </div>
+
+          <div class="mt-3 d-flex gap-2">
+            <button type="button" class="btn btn-primary" id="btn-save-experience">
+              <i class="fa-solid fa-floppy-disk me-1"></i>
+              <span id="expSaveLabel">Save Experience</span>
+            </button>
+            <button type="button" class="btn btn-outline-light btn-sm" id="btn-clear-experience-form">
+              <i class="fa-solid fa-xmark me-1"></i> Clear form
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card-glass">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="section-title mb-0">
+            <i class="fa-solid fa-timeline"></i> All Experience
+          </div>
+        </div>
+
+        <div class="list-container" id="experience-list"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ========== PASSWORD MODAL ========== -->
+<div class="modal fade" id="passwordModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-lock me-2"></i>Confirm Save</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.85rem; color:#cbd5f5;">Enter admin password to confirm and apply changes.</p>
+        <input type="password" id="adminPasswordInput" class="form-control" placeholder="Admin password">
+        <div id="passwordError" class="text-danger mt-1 d-none">Incorrect password. Try again.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary btn-sm" id="btn-confirm-password">
+          <i class="fa-solid fa-unlock-keyhole me-1"></i>Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // ====== CONFIG (EDIT THESE) ======
+  const GOOGLE_CLIENT_ID = "250326169390-s71u4c77r0obltpntkkj0vk1l2sn9bvu.apps.googleusercontent.com"; // <-- apna Client ID yahan daalo
+  const ADMIN_EMAIL = "ravivish517@gmail.com";      // <-- sirf yahi email allow hoga
+  const ADMIN_PASSWORD = "Ravivish@517#291291";         // <-- admin password
+  const STORAGE_KEY = "raviPortfolioAdminData";
+
+  let passwordModal, pendingAction = null;
+
+  // ====== INITIAL STATE ======
+  let state = {
+    branding: {
+      logoUrl: "",
+      resumeImageUrl: "",
+      resumeDownloadUrl: ""
+    },
+    projects: [],
+    certificates: [],
+    experiences: []
+  };
+
+  // ====== LOCAL STORAGE HELPERS ======
+  function loadState() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        state = Object.assign(state, parsed);
+      } catch (e) {
+        console.error("Error parsing localStorage data:", e);
+      }
+    }
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    updateStats();
+  }
+
+  // ====== DUMMY BACKEND SAVE (EDIT FOR REAL BACKEND) ======
+  async function saveToBackend(data) {
+    // Example:
+    // await fetch('/api/save-portfolio', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(data)
+    // });
+    console.log("Saving to backend (demo):", data);
+  }
+
+  // ====== GOOGLE SIGN-IN HANDLER ======
+  function parseJwt(token) {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Google callback (called when user successfully signs in)
+  window.handleCredentialResponse = function(response) {
+    const data = parseJwt(response.credential);
+    if (!data) {
+      alert("Failed to read Google token.");
+      return;
+    }
+    const email = data.email;
+    const name = data.name || "Admin";
+
+    if (email !== ADMIN_EMAIL) {
+      alert("Access denied: This email is not allowed for admin dashboard.");
+      return;
+    }
+
+    // Success
+    document.getElementById("auth-section").classList.add("d-none");
+    document.getElementById("dashboard").classList.remove("d-none");
+
+    document.getElementById("sidebar-user-email").innerText = email;
+    document.getElementById("user-email-small").innerText = email;
+    document.getElementById("user-name-small").innerText = name;
+    document.getElementById("user-avatar-text").innerText = name.charAt(0).toUpperCase();
+
+    loadState();
+    renderAll();
+  };
+
+  // Initialize Google Sign-In button
+  function initGoogleButton(retries = 10) {
+    if (window.google && google.accounts && google.accounts.id) {
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleCredentialResponse,
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+
+      // Render the standard Google button
+      google.accounts.id.renderButton(
+        document.getElementById("googleSignInContainer"),
+        {
+          type: "standard",
+          theme: "outline",
+          size: "large",
+          shape: "pill",
+          text: "continue_with",
+          logo_alignment: "left"
+        }
+      );
+
+      // optional: automatically show one-tap UI (desktop pe useful)
+      // google.accounts.id.prompt();
+    } else if (retries > 0) {
+      // GIS script abhi load nahi hua, thoda wait karke retry karo
+      setTimeout(() => initGoogleButton(retries - 1), 300);
+    } else {
+      console.error("Google Identity Services failed to load.");
+    }
+  }
+
+  // ====== NAVIGATION ======
+  function setupNavigation() {
+    const links = document.querySelectorAll(".sidebar-nav .nav-link");
+    links.forEach(link => {
+      link.addEventListener("click", () => {
+        links.forEach(l => l.classList.remove("active"));
+        link.classList.add("active");
+
+        const sectionId = link.getAttribute("data-section");
+        document.querySelectorAll("main section").forEach(sec => {
+          if (sec.id === sectionId) {
+            sec.classList.remove("d-none");
+          } else {
+            sec.classList.add("d-none");
+          }
+        });
+      });
+    });
+  }
+
+  // ====== PASSWORD MODAL LOGIC ======
+  function requirePasswordAndRun(action) {
+    pendingAction = action;
+    document.getElementById("adminPasswordInput").value = "";
+    document.getElementById("passwordError").classList.add("d-none");
+    passwordModal.show();
+  }
+
+  function setupPasswordModal() {
+    const modalElement = document.getElementById("passwordModal");
+    passwordModal = new bootstrap.Modal(modalElement);
+
+    document.getElementById("btn-confirm-password").addEventListener("click", () => {
+      const val = document.getElementById("adminPasswordInput").value;
+      if (val === ADMIN_PASSWORD) {
+        document.getElementById("passwordError").classList.add("d-none");
+        passwordModal.hide();
+        if (typeof pendingAction === "function") {
+          pendingAction();
+          pendingAction = null;
+        }
+      } else {
+        document.getElementById("passwordError").classList.remove("d-none");
+      }
+    });
+  }
+
+  // ====== BRANDING (LOGO + RESUME) ======
+  function loadBrandingForm() {
+    document.getElementById("logoUrl").value = state.branding.logoUrl || "";
+    document.getElementById("resumeImageUrl").value = state.branding.resumeImageUrl || "";
+    document.getElementById("resumeDownloadUrl").value = state.branding.resumeDownloadUrl || "";
+    updateBrandingPreview();
+  }
+
+  function updateBrandingPreview() {
+    document.getElementById("logoPreview").src = state.branding.logoUrl || "";
+    document.getElementById("resumeImagePreview").src = state.branding.resumeImageUrl || "";
+  }
+
+  function setupBrandingHandlers() {
+    document.getElementById("logoUrl").addEventListener("input", e => {
+      state.branding.logoUrl = e.target.value;
+      updateBrandingPreview();
+    });
+    document.getElementById("resumeImageUrl").addEventListener("input", e => {
+      state.branding.resumeImageUrl = e.target.value;
+      updateBrandingPreview();
+    });
+    document.getElementById("resumeDownloadUrl").addEventListener("input", e => {
+      state.branding.resumeDownloadUrl = e.target.value;
+    });
+
+    document.getElementById("btn-save-branding").addEventListener("click", () => {
+      requirePasswordAndRun(async () => {
+        saveState();
+        await saveToBackend({ type: "branding", data: state.branding });
+        alert("Branding data saved.");
+      });
+    });
+
+    document.getElementById("btn-reset-branding").addEventListener("click", () => {
+      loadState();
+      loadBrandingForm();
+    });
+  }
+
+  // ====== PROJECTS ======
+  function renderProjects() {
+    const list = document.getElementById("project-list");
+    list.innerHTML = "";
+    state.projects.forEach((p, index) => {
+      const div = document.createElement("div");
+      div.className = "item-row";
+      div.innerHTML = `
+        <div>
+          <div class="item-row-title">${p.title || "(Untitled project)"}</div>
+          <div class="item-row-meta">
+            ${p.description ? p.description.substring(0, 80) + (p.description.length > 80 ? "..." : "") : ""}
+          </div>
+          <div class="mt-1" style="font-size:0.7rem;">
+            ${p.tags && p.tags.length ? p.tags.map(t => `<span class="badge-soft me-1">${t}</span>`).join("") : ""}
+          </div>
+        </div>
+        <div class="d-flex flex-column align-items-end gap-1">
+          <button class="btn btn-outline-light btn-xs btn-sm" data-index="${index}">
+            <i class="fa-solid fa-pen-to-square me-1"></i>Edit
+          </button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+
+    // attach edit handlers
+    list.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = parseInt(btn.getAttribute("data-index"), 10);
+        loadProjectToForm(idx);
+      });
+    });
+
+    updateStats();
+  }
+
+  function loadProjectToForm(index) {
+    const project = state.projects[index];
+    if (!project) return;
+    document.getElementById("projectIndex").value = index;
+    document.getElementById("projectTitle").value = project.title || "";
+    document.getElementById("projectImage").value = project.image || "";
+    document.getElementById("projectDescription").value = project.description || "";
+    document.getElementById("projectLink").value = project.link || "";
+    document.getElementById("projectTags").value = (project.tags || []).join(", ");
+    document.getElementById("projectSaveLabel").innerText = "Update Project";
+  }
+
+  function clearProjectForm() {
+    document.getElementById("projectIndex").value = -1;
+    document.getElementById("projectTitle").value = "";
+    document.getElementById("projectImage").value = "";
+    document.getElementById("projectDescription").value = "";
+    document.getElementById("projectLink").value = "";
+    document.getElementById("projectTags").value = "";
+    document.getElementById("projectSaveLabel").innerText = "Save Project";
+  }
+
+  function setupProjectHandlers() {
+    document.getElementById("btn-save-project").addEventListener("click", () => {
+      requirePasswordAndRun(async () => {
+        const index = parseInt(document.getElementById("projectIndex").value, 10);
+        const proj = {
+          title: document.getElementById("projectTitle").value.trim(),
+          image: document.getElementById("projectImage").value.trim(),
+          description: document.getElementById("projectDescription").value.trim(),
+          link: document.getElementById("projectLink").value.trim(),
+          tags: document.getElementById("projectTags").value
+            .split(",")
+            .map(t => t.trim())
+            .filter(Boolean)
+        };
+
+        if (index >= 0 && index < state.projects.length) {
+          state.projects[index] = proj;
+        } else {
+          state.projects.push(proj);
+        }
+        saveState();
+        await saveToBackend({ type: "projects", data: state.projects });
+        renderProjects();
+        clearProjectForm();
+        alert("Project saved.");
+      });
+    });
+
+    document.getElementById("btn-clear-project-form").addEventListener("click", () => {
+      clearProjectForm();
+    });
+  }
+
+  // ====== CERTIFICATES ======
+  function renderCertificates() {
+    const list = document.getElementById("certificate-list");
+    list.innerHTML = "";
+    state.certificates.forEach((c, index) => {
+      const div = document.createElement("div");
+      div.className = "item-row";
+      div.innerHTML = `
+        <div>
+          <div class="item-row-title">${c.title || "(Untitled certificate)"}</div>
+          <div class="item-row-meta">${c.institute || ""} • ${c.date || ""}</div>
+          <div class="mt-1" style="font-size:0.7rem;">
+            ${c.tags && c.tags.length ? c.tags.map(t => `<span class="badge-soft me-1">${t}</span>`).join("") : ""}
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-outline-light btn-xs btn-sm" data-index="${index}">
+            <i class="fa-solid fa-pen-to-square me-1"></i>Edit
+          </button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+
+    list.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = parseInt(btn.getAttribute("data-index"), 10);
+        loadCertificateToForm(idx);
+      });
+    });
+
+    updateStats();
+  }
+
+  function loadCertificateToForm(index) {
+    const c = state.certificates[index];
+    if (!c) return;
+    document.getElementById("certificateIndex").value = index;
+    document.getElementById("certTitle").value = c.title || "";
+    document.getElementById("certInstitute").value = c.institute || "";
+    document.getElementById("certDate").value = c.date || "";
+    document.getElementById("certImage").value = c.image || "";
+    document.getElementById("certLink").value = c.link || "";
+    document.getElementById("certTags").value = (c.tags || []).join(", ");
+    document.getElementById("certDescription").value = c.description || "";
+    document.getElementById("certSaveLabel").innerText = "Update Certificate";
+  }
+
+  function clearCertificateForm() {
+    document.getElementById("certificateIndex").value = -1;
+    document.getElementById("certTitle").value = "";
+    document.getElementById("certInstitute").value = "";
+    document.getElementById("certDate").value = "";
+    document.getElementById("certImage").value = "";
+    document.getElementById("certLink").value = "";
+    document.getElementById("certTags").value = "";
+    document.getElementById("certDescription").value = "";
+    document.getElementById("certSaveLabel").innerText = "Save Certificate";
+  }
+
+  function setupCertificateHandlers() {
+    document.getElementById("btn-save-certificate").addEventListener("click", () => {
+      requirePasswordAndRun(async () => {
+        const index = parseInt(document.getElementById("certificateIndex").value, 10);
+        const cert = {
+          title: document.getElementById("certTitle").value.trim(),
+          institute: document.getElementById("certInstitute").value.trim(),
+          date: document.getElementById("certDate").value.trim(),
+          image: document.getElementById("certImage").value.trim(),
+          link: document.getElementById("certLink").value.trim(),
+          tags: document.getElementById("certTags").value
+            .split(",")
+            .map(t => t.trim())
+            .filter(Boolean),
+          description: document.getElementById("certDescription").value.trim()
+        };
+
+        if (index >= 0 && index < state.certificates.length) {
+          state.certificates[index] = cert;
+        } else {
+          state.certificates.push(cert);
+        }
+
+        saveState();
+        await saveToBackend({ type: "certificates", data: state.certificates });
+        renderCertificates();
+        clearCertificateForm();
+        alert("Certificate saved.");
+      });
+    });
+
+    document.getElementById("btn-clear-certificate-form").addEventListener("click", () => {
+      clearCertificateForm();
+    });
+  }
+
+  // ====== EXPERIENCE ======
+  function renderExperiences() {
+    const list = document.getElementById("experience-list");
+    list.innerHTML = "";
+    state.experiences.forEach((e, index) => {
+      const div = document.createElement("div");
+      div.className = "item-row";
+      div.innerHTML = `
+        <div>
+          <div class="item-row-title">${e.title || "(Untitled experience)"}</div>
+          <div class="item-row-meta">${e.company || ""} • ${e.duration || ""}</div>
+          <div class="mt-1" style="font-size:0.7rem;">
+            ${e.skills && e.skills.length ? e.skills.map(t => `<span class="badge-soft me-1">${t}</span>`).join("") : ""}
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-outline-light btn-xs btn-sm" data-index="${index}">
+            <i class="fa-solid fa-pen-to-square me-1"></i>Edit
+          </button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+
+    list.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = parseInt(btn.getAttribute("data-index"), 10);
+        loadExperienceToForm(idx);
+      });
+    });
+
+    updateStats();
+  }
+
+  function loadExperienceToForm(index) {
+    const e = state.experiences[index];
+    if (!e) return;
+    document.getElementById("experienceIndex").value = index;
+    document.getElementById("expTitle").value = e.title || "";
+    document.getElementById("expCompany").value = e.company || "";
+    document.getElementById("expDuration").value = e.duration || "";
+    document.getElementById("expSkills").value = (e.skills || []).join(", ");
+    document.getElementById("expDescription").value = e.description || "";
+    document.getElementById("expSaveLabel").innerText = "Update Experience";
+  }
+
+  function clearExperienceForm() {
+    document.getElementById("experienceIndex").value = -1;
+    document.getElementById("expTitle").value = "";
+    document.getElementById("expCompany").value = "";
+    document.getElementById("expDuration").value = "";
+    document.getElementById("expSkills").value = "";
+    document.getElementById("expDescription").value = "";
+    document.getElementById("expSaveLabel").innerText = "Save Experience";
+  }
+
+  function setupExperienceHandlers() {
+    document.getElementById("btn-save-experience").addEventListener("click", () => {
+      requirePasswordAndRun(async () => {
+        const index = parseInt(document.getElementById("experienceIndex").value, 10);
+        const exp = {
+          title: document.getElementById("expTitle").value.trim(),
+          company: document.getElementById("expCompany").value.trim(),
+          duration: document.getElementById("expDuration").value.trim(),
+          skills: document.getElementById("expSkills").value
+            .split(",")
+            .map(t => t.trim())
+            .filter(Boolean),
+          description: document.getElementById("expDescription").value.trim()
+        };
+
+        if (index >= 0 && index < state.experiences.length) {
+          state.experiences[index] = exp;
+        } else {
+          state.experiences.push(exp);
+        }
+
+        saveState();
+        await saveToBackend({ type: "experiences", data: state.experiences });
+        renderExperiences();
+        clearExperienceForm();
+        alert("Experience saved.");
+      });
+    });
+
+    document.getElementById("btn-clear-experience-form").addEventListener("click", () => {
+      clearExperienceForm();
+    });
+  }
+
+  // ====== STATS ======
+  function updateStats() {
+    document.getElementById("stat-projects").innerText = state.projects.length;
+    document.getElementById("stat-certificates").innerText = state.certificates.length;
+    document.getElementById("stat-experience").innerText = state.experiences.length;
+  }
+
+  // ====== LOGOUT ======
+  function setupLogout() {
+    document.getElementById("btn-logout").addEventListener("click", () => {
+      // Simple: reload page to go back to login
+      location.reload();
+    });
+  }
+
+  // ====== RENDER ALL ======
+  function renderAll() {
+    loadBrandingForm();
+    renderProjects();
+    renderCertificates();
+    renderExperiences();
+  }
+
+  // ====== INIT ======
+  document.addEventListener("DOMContentLoaded", () => {
+    setupNavigation();
+    setupPasswordModal();
+    setupBrandingHandlers();
+    setupProjectHandlers();
+    setupCertificateHandlers();
+    setupExperienceHandlers();
+    setupLogout();
+
+    // Init Google Sign-In button after DOM is ready
+    initGoogleButton();
+  });
+</script>
+</body>
+</html>
